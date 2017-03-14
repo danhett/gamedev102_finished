@@ -1,7 +1,7 @@
 var GameState = function(game){
   var paddle;
   var ball;
-  var blocks = [];
+  var blocks;
 };
 
 GameState.prototype = {
@@ -36,13 +36,23 @@ GameState.prototype = {
 
   // BLOCKS
   setupBlocks: function() {
+    this.blocks = this.game.add.physicsGroup();
 
+    for(var i = 0; i < 12; i++)
+    {
+      for(var j = 0; j < 3; j++)
+      {
+        var block = this.blocks.create(15 + (i * 64), 50 + (j * 32), 'red-block');
+        block.body.immovable = true;
+      }
+    }
   },
 
   update: function() {
     this.paddle.x = this.ball.x;
 
     game.physics.arcade.collide(this.ball, this.paddle);
+    game.physics.arcade.collide(this.ball, this.blocks);
   },
 
   render: function() {
