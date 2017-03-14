@@ -21,6 +21,10 @@ LoaderState.prototype = {
 		this.game.load.image('ball', 'assets/ball.png');
 		this.game.load.image('paddle', 'assets/paddle.png');
 		this.game.load.image('red-block', 'assets/blockRed.png');
+		this.game.load.image('blue-block', 'assets/blockBlue.png');
+		this.game.load.image('green-block', 'assets/blockGreen.png');
+		this.game.load.image('yellow-block', 'assets/blockYellow.png');
+
 	},
 
   create: function(){

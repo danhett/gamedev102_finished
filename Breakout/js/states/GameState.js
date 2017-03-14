@@ -37,15 +37,16 @@ GameState.prototype = {
   // BLOCKS
   setupBlocks: function() {
     this.blocks = this.game.add.physicsGroup();
+    this.blockTypes = ["red-block", "green-block", "yellow-block", "blue-block"];
 
     var columns = 12;
-    var rows = 5;
+    var rows = 4;
 
     for(var i = 0; i < columns; i++)
     {
       for(var j = 0; j < rows; j++)
       {
-        var block = this.blocks.create(15 + i * 64, 30 + j * 32, 'red-block');
+        var block = this.blocks.create(15 + i * 64, 30 + j * 32, this.blockTypes[j]);
         block.body.immovable = true;
       }
     }
