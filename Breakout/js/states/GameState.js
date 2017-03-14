@@ -38,21 +38,40 @@ GameState.prototype = {
   setupBlocks: function() {
     this.blocks = this.game.add.physicsGroup();
 
-    for(var i = 0; i < 12; i++)
+    var columns = 12;
+    var rows = 5;
+
+    for(var i = 0; i < columns; i++)
     {
-      for(var j = 0; j < 3; j++)
+      for(var j = 0; j < rows; j++)
       {
-        var block = this.blocks.create(15 + (i * 64), 50 + (j * 32), 'red-block');
+        var block = this.blocks.create(15 + i * 64, 30 + j * 32, 'red-block');
         block.body.immovable = true;
       }
     }
   },
 
   update: function() {
-    this.paddle.x = this.ball.x;
+    this.paddle.x = game.input.mousePointer.x;
 
-    game.physics.arcade.collide(this.ball, this.paddle);
-    game.physics.arcade.collide(this.ball, this.blocks);
+    game.physics.arcade.collide(this.ball, this.paddle, this.onPaddleHit);
+    game.physics.arcade.collide(this.ball, this.blocks, this.onBlockHit);
+  },
+
+  onPaddleHit(ball, paddle) {
+    if(ball.body.velocity.x < 0)
+      ball.body.velocity.x -= 1;
+    else
+      ball.body.velocity.x += 1;
+
+    if(ball.body.velocity.y < 0)
+      ball.body.velocity.y -= 1;
+    else
+      ball.body.velocity.y += 1;
+  },
+
+  onBlockHit(ball, block) {
+    block.destroy();
   },
 
   render: function() {
