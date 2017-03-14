@@ -9,6 +9,8 @@ function setupPhaser() {
 }
 
 function init() {
+  game.physics.startSystem(Phaser.Physics.ARCADE);
+
   game.state.add("LoaderState", LoaderState);
   game.state.add("MenuState", MenuState);
   game.state.add("GameState", GameState);
