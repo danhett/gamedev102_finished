@@ -23,6 +23,8 @@ GameState.prototype = {
     this.ball.body.velocity.y = 250;
     this.ball.body.collideWorldBounds = true;
     this.ball.body.bounce.set(1);
+
+    this.game.physics.arcade.checkCollision.down = false;
   },
 
   // PADDLE
@@ -57,6 +59,10 @@ GameState.prototype = {
 
     game.physics.arcade.collide(this.ball, this.paddle, this.onPaddleHit);
     game.physics.arcade.collide(this.ball, this.blocks, this.onBlockHit);
+
+    if(this.ball.y > this.game.height) {
+      game.state.start("MenuState");
+    }
   },
 
   onPaddleHit(ball, paddle) {
