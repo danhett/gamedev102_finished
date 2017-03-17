@@ -38,6 +38,8 @@ GameState.prototype = {
   },
 
   setupEnemies: function() {
+
+    // make asteroids
     for(var i = 0; i < 10; i++) {
       var enemy = this.enemies.create(1200, 800, "asteroid");
       enemy.anchor.set(0.5, 0.5);
@@ -47,6 +49,15 @@ GameState.prototype = {
       enemy.checkWorldBounds = true;
       enemy.events.onOutOfBounds.add(this.recycleEnemy, this);
     }
+
+    // make enemy ship
+    var enemyShip = this.game.add.sprite(1200, 300, "enemy-ship");
+    enemyShip.anchor.set(0.5, 0.5);
+    this.game.physics.enable(enemyShip, Phaser.Physics.ARCADE);
+    enemyShip.body.velocity.x = -500;
+
+    enemyShip.checkWorldBounds = true;
+    enemyShip.events.onOutOfBounds.add(this.recycleEnemy, this);
   },
 
   addControls: function() {
@@ -107,8 +118,17 @@ GameState.prototype = {
   },
 
   recycleEnemy: function(_enemy) {
+
     _enemy.x = 1200 + (Math.random() * 5000);
     _enemy.y = Math.random() * 600;
-    _enemy.body.velocity.x = -300;
+
+    if(_enemy.key == "asteroid") {
+      _enemy.body.velocity.x = -300;
+      _enemy.body.velocity.y = -20 + (Math.random() * 40);
+      _enemy.body.angularVelocity = -10 + (Math.random() * 20);
+    }
+    else if(_enemy.key == "enemy-ship") {
+      _enemy.body.velocity.x = -500;
+    }
   }
 }
