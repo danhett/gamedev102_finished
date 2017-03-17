@@ -19,6 +19,7 @@ LoaderState.prototype = {
 		this.game.load.image('start-button', 'assets/start.png');
 		this.game.load.image('game-background', 'assets/space.png');
 		this.game.load.image('ship', 'assets/ship.png');
+		this.game.load.image('laser', 'assets/laser.png');
 	},
 
   create: function(){

@@ -1,10 +1,12 @@
 var GameState = function(game){
-  var bg;
-  var ship;
-  var cursors;
-  var shootButton;
+  this.bg;
+  this.ship;
+  this.cursors;
+  this.shootButton;
+  this.laser;
 
-  var bgSpeed = 4;
+  this.bgSpeed = 4;
+  this.shipMoveSpeed = 5;
 };
 
 GameState.prototype = {
@@ -15,7 +17,9 @@ GameState.prototype = {
 
   setupGame: function() {
     this.bg = this.game.add.tileSprite(0, 0, 1000, 600, "game-background");
+
     this.ship = this.game.add.sprite(40, 250, "ship");
+    this.ship.anchor.set(0, 0.5);
   },
 
   addControls: function() {
@@ -25,16 +29,33 @@ GameState.prototype = {
   },
 
   shootLaser: function() {
-    console.log("pew!");
+    this.laser = this.game.add.sprite(this.ship.x + 50, this.ship.y, "laser");
+    this.laser.anchor.set(0, 0.5);
+    this.game.physics.enable(this.laser, Phaser.Physics.ARCADE);
+    this.laser.body.velocity.x = 800;
+
+    this.laser.checkWorldBounds = true;
+    this.laser.events.onOutOfBounds.add(this.killLaser, this);
+  },
+
+  killLaser: function(_laser) {
+    _laser.destroy();
   },
 
   update: function() {
-    this.bg.tilePosition.x -= 4;
+
+    this.bg.tilePosition.x -= this.bgSpeed;
 
     if(this.cursors.up.isDown)
-      this.ship.y -= 4;
+      this.ship.y -= this.shipMoveSpeed;
 
     if(this.cursors.down.isDown)
-      this.ship.y += 4;
+      this.ship.y += this.shipMoveSpeed;
+
+    if(this.cursors.left.isDown)
+      this.ship.x -= this.shipMoveSpeed;
+
+    if(this.cursors.right.isDown)
+      this.ship.x += this.shipMoveSpeed;
   }
 }
