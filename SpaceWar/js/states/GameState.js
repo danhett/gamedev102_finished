@@ -31,20 +31,22 @@ GameState.prototype = {
 
     this.emitter = this.game.add.emitter(0, 0, 100);
     this.emitter.makeParticles('asteroid-chunk');
-    this.emitter.minParticleSpeed.setTo(-200, -200);
-    this.emitter.maxParticleSpeed.setTo(200, 200);
+    this.emitter.minParticleSpeed.setTo(-100, -100);
+    this.emitter.maxParticleSpeed.setTo(300, 300);
     this.emitter.gravity.x = -500;
     this.emitter.gravity.y = 0;
   },
 
   setupEnemies: function() {
-    var asteroid = this.enemies.create(1200, 300, "asteroid");
-    asteroid.anchor.set(0.5, 0.5);
-    this.game.physics.enable(asteroid, Phaser.Physics.ARCADE);
-    asteroid.body.velocity.x = -300;
+    for(var i = 0; i < 10; i++) {
+      var enemy = this.enemies.create(1200, 800, "asteroid");
+      enemy.anchor.set(0.5, 0.5);
+      this.game.physics.enable(enemy, Phaser.Physics.ARCADE);
+      enemy.body.velocity.x = -300;
 
-    asteroid.checkWorldBounds = true;
-    asteroid.events.onOutOfBounds.add(this.recycleEnemy, this);
+      enemy.checkWorldBounds = true;
+      enemy.events.onOutOfBounds.add(this.recycleEnemy, this);
+    }
   },
 
   addControls: function() {
@@ -64,7 +66,7 @@ GameState.prototype = {
   },
 
   killLaser: function(_laser) {
-    _laser.destroy();
+    _laser.kill();
   },
 
   update: function() {
@@ -91,7 +93,7 @@ GameState.prototype = {
   },
 
   checkCollisions: function() {
-    game.physics.arcade.collide(this.lasers, this.enemies, this.onEnemyDestroyed, null, this);
+    game.physics.arcade.overlap(this.lasers, this.enemies, this.onEnemyDestroyed, null, this);
   },
 
   onEnemyDestroyed: function(_laser, _enemy) {
@@ -100,13 +102,12 @@ GameState.prototype = {
 
     this.emitter.start(true, 4000, null, 6);
 
-    _laser.destroy();
-
+    this.killLaser(_laser);
     this.recycleEnemy(_enemy);
   },
 
   recycleEnemy: function(_enemy) {
-    _enemy.x = 1200;
+    _enemy.x = 1200 + (Math.random() * 5000);
     _enemy.y = Math.random() * 600;
     _enemy.body.velocity.x = -300;
   }
