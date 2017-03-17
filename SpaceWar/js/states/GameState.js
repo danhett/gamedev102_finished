@@ -3,15 +3,20 @@ var GameState = function(game){
   this.ship;
   this.cursors;
   this.shootButton;
-  this.laser;
 
   this.bgSpeed = 4;
   this.shipMoveSpeed = 5;
+
+  this.lasers;
+  this.enemies;
+
+  this.emitter;
 };
 
 GameState.prototype = {
   create: function() {
     this.setupGame();
+    this.setupEnemies();
     this.addControls();
   },
 
@@ -20,6 +25,22 @@ GameState.prototype = {
 
     this.ship = this.game.add.sprite(40, 250, "ship");
     this.ship.anchor.set(0, 0.5);
+
+    this.lasers = this.game.add.group();
+    this.enemies = this.game.add.group();
+
+    this.emitter = this.game.add.emitter(0, 0, 100);
+    this.emitter.makeParticles('asteroid-chunk');
+    this.emitter.minParticleSpeed.setTo(-200, -200);
+    this.emitter.maxParticleSpeed.setTo(200, 200);
+    this.emitter.gravity.x = -300;
+    this.emitter.gravity.y = 0;
+  },
+
+  setupEnemies: function() {
+    var asteroid = this.enemies.create(600, 300, "asteroid");
+    asteroid.anchor.set(0.5, 0.5);
+    this.game.physics.enable(asteroid, Phaser.Physics.ARCADE);
   },
 
   addControls: function() {
@@ -29,13 +50,13 @@ GameState.prototype = {
   },
 
   shootLaser: function() {
-    this.laser = this.game.add.sprite(this.ship.x + 50, this.ship.y, "laser");
-    this.laser.anchor.set(0, 0.5);
-    this.game.physics.enable(this.laser, Phaser.Physics.ARCADE);
-    this.laser.body.velocity.x = 800;
+    var laser = this.lasers.create(this.ship.x + 50, this.ship.y, "laser");
+    laser.anchor.set(0, 0.5);
+    this.game.physics.enable(laser, Phaser.Physics.ARCADE);
+    laser.body.velocity.x = 800;
 
-    this.laser.checkWorldBounds = true;
-    this.laser.events.onOutOfBounds.add(this.killLaser, this);
+    laser.checkWorldBounds = true;
+    laser.events.onOutOfBounds.add(this.killLaser, this);
   },
 
   killLaser: function(_laser) {
@@ -43,9 +64,15 @@ GameState.prototype = {
   },
 
   update: function() {
+    this.moveEverything();
+    this.checkCollisions();
+  },
 
+  moveEverything: function() {
+    // scroll the background
     this.bg.tilePosition.x -= this.bgSpeed;
 
+    // move the ship
     if(this.cursors.up.isDown)
       this.ship.y -= this.shipMoveSpeed;
 
@@ -57,5 +84,19 @@ GameState.prototype = {
 
     if(this.cursors.right.isDown)
       this.ship.x += this.shipMoveSpeed;
+  },
+
+  checkCollisions: function() {
+    game.physics.arcade.collide(this.lasers, this.enemies, this.onEnemyDestroyed, null, this);
+  },
+
+  onEnemyDestroyed: function(_laser, _enemy) {
+    this.emitter.x = _enemy.x;
+    this.emitter.y = _enemy.y;
+
+    this.emitter.start(true, 2000, null, 10);
+
+    _laser.destroy();
+    _enemy.destroy();
   }
 }
