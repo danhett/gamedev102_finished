@@ -4,6 +4,7 @@ var GameState = function(game){
   this.cursors;
   this.jump;
   this.walls;
+  this.coins;
   this.walkSpeed = 20;
   this.maxSpeed = 300;
   this.jumpHeight = 600;
@@ -48,29 +49,41 @@ GameState.prototype = {
     var level = [
       'xxxxxxxxxxxxxxxxxxx',
       'x                 x',
+      'x         ooooooo x',
       'x                 x',
+      'x ooo     xxxxxxxxx',
       'x                 x',
-      'x         xxxxxxxxx',
+      'xxxxxx  ooo   ooo x',
       'x                 x',
-      'xxxxxx            x',
+      'x ooo   xxx  xxxxxx',
       'x                 x',
-      'x       xxx  xxxxxx',
-      'x                 x',
-      'xxxxxx            x',
+      'xxxxxx   ooooooo  x',
       'x                 x',
       'xxxxxxxxxxxxxxxxxxx',
     ];
 
     this.walls = game.add.group();
+    this.coins = game.add.group();
 
     for (var i = 0; i < level.length; i++) {
       for (var j = 0; j < level[i].length; j++) {
+
+        // BLOCK
         if (level[i][j] == 'x') {
             var wall = game.add.sprite(64*j, 64*i, 'box');
             game.physics.enable(wall, Phaser.Physics.ARCADE);
             wall.body.immovable = true;
 
             this.walls.add(wall);
+        }
+
+        // COIN
+        if (level[i][j] == 'o') {
+            var coin = game.add.sprite(64*j, 64*i, 'coin');
+            game.physics.enable(coin, Phaser.Physics.ARCADE);
+            coin.body.immovable = true;
+
+            this.coins.add(coin);
         }
       }
     }
@@ -90,11 +103,6 @@ GameState.prototype = {
     if(this.player.body.touching.down) {
       this.player.body.velocity.y -= this.jumpHeight;
     }
-  },
-
-  update: function() {
-    this.checkCollisions();
-    this.movePlayer();
   },
 
   movePlayer: function() {
@@ -127,7 +135,20 @@ GameState.prototype = {
     }
   },
 
+  //----------------------------------------------------------------------------
+  //                           TICK
+  //----------------------------------------------------------------------------
+  update: function() {
+    this.checkCollisions();
+    this.movePlayer();
+  },
+
   checkCollisions: function() {
     game.physics.arcade.collide(this.player, this.walls);
+    game.physics.arcade.overlap(this.player, this.coins, this.onCoinCollect);
+  },
+
+  onCoinCollect: function(player, coin) {
+    coin.kill();
   }
 }
