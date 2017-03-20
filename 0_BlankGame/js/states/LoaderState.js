@@ -16,11 +16,11 @@ LoaderState.prototype = {
 	},
 
 	loadObjects: function() {
-		this.game.load.image('start-button', 'assets/start.png');
-		this.game.load.image('game-background', 'assets/game-background.jpg');
+		game.load.image('start-button', 'assets/start.png');
+		game.load.image('game-background', 'assets/game-background.jpg');
 	},
 
   create: function(){
-  	this.game.state.start("MenuState");
+  	game.state.start("MenuState");
   }
 }

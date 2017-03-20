@@ -140,7 +140,7 @@ onPaddleHit(ball, paddle) {
 }
 ```
 
-This is a reall standard way of doing collision detection in Phaser, and we'll be using it loads in the next few games.
+This is a really standard way of doing collision detection in Phaser, and we'll be using it loads in the next few games.
 
 #### ADD A DEBUG READOUT
 As game developers, we sometimes want extra info about our game that players won't see. This is sometimes called 'debug' information, as it allows you to observe stuff in your game and fix problems. Now we've made our speed increase, it would be handy to keep an eye on it (or at least prove it's working!).

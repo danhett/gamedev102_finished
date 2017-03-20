@@ -21,15 +21,15 @@ GameState.prototype = {
   },
 
   setupGame: function() {
-    this.bg = this.game.add.tileSprite(0, 0, 1000, 600, "game-background");
+    this.bg = game.add.tileSprite(0, 0, 1000, 600, "game-background");
 
-    this.ship = this.game.add.sprite(40, 250, "ship");
+    this.ship = game.add.sprite(40, 250, "ship");
     this.ship.anchor.set(0, 0.5);
 
-    this.lasers = this.game.add.group();
-    this.enemies = this.game.add.group();
+    this.lasers = game.add.group();
+    this.enemies = game.add.group();
 
-    this.emitter = this.game.add.emitter(0, 0, 100);
+    this.emitter = game.add.emitter(0, 0, 100);
     this.emitter.makeParticles('asteroid-chunk');
     this.emitter.minParticleSpeed.setTo(-100, -100);
     this.emitter.maxParticleSpeed.setTo(300, 300);
@@ -43,7 +43,7 @@ GameState.prototype = {
     for(var i = 0; i < 10; i++) {
       var enemy = this.enemies.create(1200, 800, "asteroid");
       enemy.anchor.set(0.5, 0.5);
-      this.game.physics.enable(enemy, Phaser.Physics.ARCADE);
+      game.physics.enable(enemy, Phaser.Physics.ARCADE);
       enemy.body.velocity.x = -300;
 
       enemy.checkWorldBounds = true;
@@ -51,9 +51,9 @@ GameState.prototype = {
     }
 
     // make enemy ship
-    var enemyShip = this.game.add.sprite(1200, 300, "enemy-ship");
+    var enemyShip = game.add.sprite(1200, 300, "enemy-ship");
     enemyShip.anchor.set(0.5, 0.5);
-    this.game.physics.enable(enemyShip, Phaser.Physics.ARCADE);
+    game.physics.enable(enemyShip, Phaser.Physics.ARCADE);
     enemyShip.body.velocity.x = -500;
 
     enemyShip.checkWorldBounds = true;
@@ -61,15 +61,15 @@ GameState.prototype = {
   },
 
   addControls: function() {
-    this.cursors = this.game.input.keyboard.createCursorKeys();
-    this.shootButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    this.cursors = game.input.keyboard.createCursorKeys();
+    this.shootButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     this.shootButton.onDown.add(this.shootLaser, this);
   },
 
   shootLaser: function() {
     var laser = this.lasers.create(this.ship.x + 50, this.ship.y, "laser");
     laser.anchor.set(0, 0.5);
-    this.game.physics.enable(laser, Phaser.Physics.ARCADE);
+    game.physics.enable(laser, Phaser.Physics.ARCADE);
     laser.body.velocity.x = 800;
 
     laser.checkWorldBounds = true;
