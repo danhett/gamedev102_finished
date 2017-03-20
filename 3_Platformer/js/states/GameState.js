@@ -29,7 +29,7 @@ GameState.prototype = {
     game.physics.enable(this.player, Phaser.Physics.ARCADE);
     this.player.body.collideWorldBounds = true;
     this.player.body.maxVelocity.x = this.maxSpeed;
-    this.player.body.drag.x = 400;
+    this.player.body.drag.x = 600;
   },
 
   addControls: function() {
@@ -74,7 +74,7 @@ GameState.prototype = {
         this.player.animations.play('jump');
       }
       else {
-        this.player.animations.play('idle');  
+        this.player.animations.play('idle');
       }
     }
   },
