@@ -66,15 +66,8 @@ GameState.prototype = {
   },
 
   onPaddleHit(ball, paddle) {
-    if(ball.body.velocity.x < 0)
-      ball.body.velocity.x -= 1;
-    else
-      ball.body.velocity.x += 1;
-
-    if(ball.body.velocity.y < 0)
-      ball.body.velocity.y -= 1;
-    else
-      ball.body.velocity.y += 1;
+    ball.body.velocity.x *= 1.005;
+    ball.body.velocity.y *= 1.005;
   },
 
   onBlockHit(ball, block) {
