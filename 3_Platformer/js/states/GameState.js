@@ -5,14 +5,19 @@ var GameState = function(game){
   this.jump;
   this.walls;
   this.coins;
-  this.walkSpeed = 20;
+
+  this.worldWidth = 1920;
+  this.worldHeight = 1080;
+  this.playerAccelRate = 20;
   this.maxSpeed = 300;
   this.jumpHeight = 600;
+  this.playerDrag = 600;
+  this.playerGravity = 1000;
 };
 
 GameState.prototype = {
   create: function() {
-  	this.bg = game.add.tileSprite(0, 0, 1920, 1080, "sky");
+  	this.bg = game.add.tileSprite(0, 0, this.worldWidth, this.worldHeight, "sky");
 
     this.createPlayer();
     this.createLevel();
@@ -34,10 +39,10 @@ GameState.prototype = {
 
     game.physics.enable(this.player, Phaser.Physics.ARCADE);
     this.player.body.maxVelocity.x = this.maxSpeed;
-    this.player.body.drag.x = 600;
-    this.player.body.gravity.y = 1000;
+    this.player.body.drag.x = this.playerDrag;
+    this.player.body.gravity.y = this.playerGravity;
 
-    game.world.setBounds(0, 0, 1920, 1080);
+    game.world.setBounds(0, 0, this.worldWidth, this.worldHeight);
     game.camera.follow(this.player, Phaser.Camera.FOLLOW_PLATFORMER);
   },
 
@@ -107,12 +112,12 @@ GameState.prototype = {
 
   movePlayer: function() {
     if(this.cursors.left.isDown) {
-      this.player.body.velocity.x -= this.walkSpeed;
+      this.player.body.velocity.x -= this.playerAccelRate;
       this.player.scale.set(-1,1);
       this.setCorrectAnimationState(true);
     }
     else if(this.cursors.right.isDown) {
-      this.player.body.velocity.x += this.walkSpeed;
+      this.player.body.velocity.x += this.playerAccelRate;
       this.player.scale.set(1,1);
       this.setCorrectAnimationState(true);
     }
