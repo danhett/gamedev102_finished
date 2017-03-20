@@ -53,19 +53,19 @@ GameState.prototype = {
     if(this.cursors.left.isDown) {
       this.player.body.velocity.x -= this.walkSpeed;
       this.player.scale.set(-1,1);
-      this.setRunOrJump(true);
+      this.setCorrectAnimationState(true);
     }
     else if(this.cursors.right.isDown) {
       this.player.body.velocity.x += this.walkSpeed;
       this.player.scale.set(1,1);
-      this.setRunOrJump(true);
+      this.setCorrectAnimationState(true);
     }
     else {
-      this.setRunOrJump(false);
+      this.setCorrectAnimationState(false);
     }
   },
 
-  setRunOrJump: function(isPressing) {
+  setCorrectAnimationState: function(isPressing) {
     if(isPressing && this.player.body.onFloor()) {
       this.player.animations.play('run', 15, true);
     }
