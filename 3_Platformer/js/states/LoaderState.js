@@ -17,7 +17,8 @@ LoaderState.prototype = {
 
 	loadObjects: function() {
 		this.game.load.image('start-button', 'assets/start.png');
-		this.game.load.image('game-background', 'assets/game-background.jpg');
+		this.game.load.image('sky', 'assets/sky.png');
+		this.game.load.spritesheet('player', 'assets/player-sheet.png', 72, 97, 6);
 	},
 
   create: function(){
