@@ -10,7 +10,6 @@ function setupPhaser() {
 
 function init() {
   game.physics.startSystem(Phaser.Physics.ARCADE);
-  game.physics.arcade.gravity.y = 1000;
 
   game.state.add("LoaderState", LoaderState);
   game.state.add("MenuState", MenuState);
