@@ -1,6 +1,6 @@
 # BREAKOUT! - WORKSHOP NOTES
 
-### AIM
+#### AIM
 Our first game is super simple, and is designed to show you how this stuff fits together. Breakout is a nice easy game to re-make, and is still quite fun - it also has lots of ways in which it can be improved after the course too!
 
 #### COPY THE BLANK PROJECT
@@ -36,7 +36,7 @@ This means we can use this object in different places. Very useful! More on this
 Now we've made our ball variable, we can tell Phaser to make the ball. Add a function called `setupBall()` and put this in:
 
 ```javascript
-this.ball = this.game.add.sprite(400, 300, "ball");
+this.ball = game.add.sprite(400, 300, "ball");
 this.ball.anchor.set(0.5, 0.5);
 ```
 The anchor point is important - by default things use TOP LEFT but sometimes this isn't appropriate. More on this later.
@@ -48,7 +48,7 @@ Test the game, and our ball should appear. However it's not doing anything yet -
 Earlier we turned on our physics engine, and now it's time to use it - we need to give our ball some properties.
 
 ```javascript
-this.game.physics.enable(this.ball, Phaser.Physics.ARCADE);
+game.physics.enable(this.ball, Phaser.Physics.ARCADE);
 this.ball.body.velocity.x = 250;
 this.ball.body.velocity.y = 250;
 this.ball.body.collideWorldBounds = true;
@@ -64,10 +64,10 @@ To add the paddle, we do exactly the same as before, adding a new variable at th
 The paddle is very similar:
 
 ```javascript
-this.paddle = this.game.add.sprite(20, 550, "paddle");
+this.paddle = game.add.sprite(20, 550, "paddle");
 this.paddle.anchor.set(0.5, 0.5);
 
-this.game.physics.enable(this.paddle, Phaser.Physics.ARCADE);
+game.physics.enable(this.paddle, Phaser.Physics.ARCADE);
 this.paddle.body.immovable = true;
 ```
 
@@ -105,7 +105,7 @@ Right now there isn't a game - you can't lose! We can easily fix that. In Breako
 To do this, simply add this line at the bottom of the `setupBall()` function:
 
 ```javascript
-this.game.physics.arcade.checkCollision.down = false;
+game.physics.arcade.checkCollision.down = false;
 ```
 
 If you test your game now, the ball should disappear off the bottom of the screen - however, nothing actually happens. The final thing we want is some logic to detect when this happens.
@@ -115,7 +115,7 @@ The best place for this is `update()`, as we want to check every single frame if
 To do this, simply add a little `if` statement to the `update()` function:
 
 ```javascript
-if(this.ball.y > this.game.height) {
+if(this.ball.y > game.height) {
   game.state.start("MenuState");
 }
 ```
@@ -151,7 +151,7 @@ The full function looks like this:
 
 ```javascript
 render: function() {
-  this.game.debug.text(this.ball.body.velocity.x + "/" + this.ball.body.velocity.y, 20, 30);
+  game.debug.text(this.ball.body.velocity.x + "/" + this.ball.body.velocity.y, 20, 30);
 }
 ```
 
@@ -170,7 +170,7 @@ We're going to make a new function in the same way as `setupBall()`, for our blo
 
 ```javascript
 setupBlocks: function() {
-  this.blocks = this.game.add.physicsGroup();
+  this.blocks = game.add.physicsGroup();
 
   var blockWidth = 64;
   var blockHeight = 32;
@@ -181,7 +181,7 @@ setupBlocks: function() {
   {
     for(var j = 0; j < rows; j++)
     {
-      var block = this.blocks.create(15 + i * blockWidth, 30 + j * blockHeight, this.blockTypes[j]);
+      var block = this.blocks.create(15 + i * blockWidth, 30 + j * blockHeight, "red-block");
       block.body.immovable = true;
     }
   }
@@ -192,7 +192,7 @@ The `blockWidth` and `blockHeight` we know because that's how big our artwork is
 
 [ EXPLAIN LOOPS PROPERLY! ]
 
-The important part here is that we're doing `this.blocks.create` rather than `this.game.add.sprite`. This is super important - it'll still make our block, but the block will belong to the `blocks` group.
+The important part here is that we're doing `this.blocks.create` rather than `game.add.sprite`. This is super important - it'll still make our block, but the block will belong to the `blocks` group.
 
 #### ADD BLOCK COLLISIONS
 This part is very easy, thanks to the power of groups! Regardless of how many blocks we have, we can do ALL the collision detection with a single line of code.
@@ -202,3 +202,42 @@ Find the line of code in `update()` that does the ball/paddle check, and add ano
 ```javascript
 game.physics.arcade.collide(this.ball, this.blocks, this.onBlockHit);
 ```
+Like magic, this will check if the ball hits ANY of our blocks. Easy! All you need to do now is add the handler, in the same way as we did the last time:
+
+```javascript
+onBlockHit(ball, block) {
+  block.destroy();
+}
+```
+
+#### ADD MORE BLOCK TYPES
+The final handy detail is that we can easily add more block types - there are four in the assets, so let's add them all.
+
+First, we need to make an `array` of blocks. Arrays are like lists of variables, and they're handy for lots of things that require sequences of objects, or lists, or anything like that. In fact, when we put all our blocks into a group, they're actually really an array of blocks.
+
+To make our array, in `setupBlocks()`, add the following line:
+
+```javascript
+this.blockTypes = ["red-block", "green-block", "yellow-block", "blue-block"];
+```
+To get the name out of the array, you can do something like  `this.blockType[0]`, which will return the first element in the array (everything starts at zero in computer land).
+
+To use this, find the block creation line, and change `red-block` to the following:
+
+```javascript
+this.blockTypes[j]
+```
+
+So the full line looks like:
+
+```javascript
+var block = this.blocks.create(15 + i * blockWidth, 30 + j * blockHeight, this.blockTypes[j]);
+```
+
+Run your game and you should get a nice line of each colour block.
+
+#### EXTRA CREDIT
+Obviously this is just a little demo, but Breakout is ripe for adding things to. Why not try:
+- Adding a left/right bias depending on where the ball hits the paddle?
+- Adding a score readout?
+- Adding more levels?
