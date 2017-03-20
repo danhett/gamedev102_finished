@@ -1,7 +1,7 @@
 var GameState = function(game){
-  var paddle;
-  var ball;
-  var blocks;
+  this.paddle;
+  this.ball;
+  this.blocks;
 };
 
 GameState.prototype = {
