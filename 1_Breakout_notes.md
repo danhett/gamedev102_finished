@@ -154,3 +154,51 @@ render: function() {
   this.game.debug.text(this.ball.body.velocity.x + "/" + this.ball.body.velocity.y, 20, 30);
 }
 ```
+
+Run your game, and you'll see your speed increase printed in the corner. Super useful!
+
+#### CREATE THE BLOCKS
+Now of course, we're missing arguably the most important part of Breakout - the blocks! Now, we could probably add these all manually using the stuff we've already learned, but we're going to add loads of blocks. This gets difficult very quickly both when creating objects, but also when doing things like collisions.
+
+Luckily, we can speed things up with some clever code. First, let's MAKE the blocks. To do this, we're going to make a Group. This is a sort of collection that will hold all of our blocks, and will let us doing really easy collision detection later on. At the very top in the constructor, add:
+
+```javascript
+this.blocks
+```
+
+We're going to make a new function in the same way as `setupBall()`, for our blocks:
+
+```javascript
+setupBlocks: function() {
+  this.blocks = this.game.add.physicsGroup();
+
+  var blockWidth = 64;
+  var blockHeight = 32;
+  var columns = 12;
+  var rows = 4;
+
+  for(var i = 0; i < columns; i++)
+  {
+    for(var j = 0; j < rows; j++)
+    {
+      var block = this.blocks.create(15 + i * blockWidth, 30 + j * blockHeight, this.blockTypes[j]);
+      block.body.immovable = true;
+    }
+  }
+}
+```
+
+The `blockWidth` and `blockHeight` we know because that's how big our artwork is. The `columns` and `rows` numbers can be anything, but these are good numbers for this sort of layout for now. Of course, you can do anything here.
+
+[ EXPLAIN LOOPS PROPERLY! ]
+
+The important part here is that we're doing `this.blocks.create` rather than `this.game.add.sprite`. This is super important - it'll still make our block, but the block will belong to the `blocks` group.
+
+#### ADD BLOCK COLLISIONS
+This part is very easy, thanks to the power of groups! Regardless of how many blocks we have, we can do ALL the collision detection with a single line of code.
+
+Find the line of code in `update()` that does the ball/paddle check, and add another one underneath:
+
+```javascript
+game.physics.arcade.collide(this.ball, this.blocks, this.onBlockHit);
+```
