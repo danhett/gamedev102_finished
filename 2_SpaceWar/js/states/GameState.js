@@ -16,6 +16,7 @@ var GameState = function(game){
 GameState.prototype = {
   create: function() {
     this.setupGame();
+    this.setupEmitter();
     this.setupEnemies();
     this.addControls();
   },
@@ -28,7 +29,9 @@ GameState.prototype = {
 
     this.lasers = game.add.group();
     this.enemies = game.add.group();
+  },
 
+  setupEmitter: function() {
     this.emitter = game.add.emitter(0, 0, 100);
     this.emitter.makeParticles('asteroid-chunk');
     this.emitter.minParticleSpeed.setTo(-100, -100);
@@ -38,7 +41,6 @@ GameState.prototype = {
   },
 
   setupEnemies: function() {
-
     // make asteroids
     for(var i = 0; i < 10; i++) {
       var enemy = this.enemies.create(1200, 800, "asteroid");
@@ -81,15 +83,16 @@ GameState.prototype = {
   },
 
   update: function() {
-    this.moveEverything();
+    this.scrollBackground();
+    this.checkControls();
     this.checkCollisions();
   },
 
-  moveEverything: function() {
-    // scroll the background
+  scrollBackground: function() {
     this.bg.tilePosition.x -= this.bgSpeed;
+  },
 
-    // move the ship
+  checkControls: function() {
     if(this.cursors.up.isDown)
       this.ship.y -= this.shipMoveSpeed;
 
@@ -118,7 +121,6 @@ GameState.prototype = {
   },
 
   recycleEnemy: function(_enemy) {
-
     _enemy.x = 1200 + (Math.random() * 5000);
     _enemy.y = Math.random() * 600;
 
