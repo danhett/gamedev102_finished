@@ -21,6 +21,9 @@ LoaderState.prototype = {
 		this.game.load.image('box', 'assets/box.png');
 		this.game.load.image('coin', 'assets/coin.png');
 		this.game.load.spritesheet('player', 'assets/player-sheet.png', 72, 97, 6);
+
+		this.game.load.audio('game-music', 'assets/audio/gamemusic.mp3');
+		this.game.load.audio('sfx-coin', 'assets/audio/coin.mp3');
 	},
 
   create: function(){

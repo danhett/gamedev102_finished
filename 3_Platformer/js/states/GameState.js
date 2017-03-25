@@ -13,15 +13,27 @@ var GameState = function(game){
   this.jumpHeight = 600;
   this.playerDrag = 600;
   this.playerGravity = 1000;
+
+  this.gameMusic;
+  this.coinSound;
 };
 
 GameState.prototype = {
   create: function() {
   	this.bg = game.add.tileSprite(0, 0, this.worldWidth, this.worldHeight, "sky");
 
+    this.setupSound();
     this.createPlayer();
     this.createLevel();
     this.addControls();
+  },
+
+  setupSound: function() {
+    this.gameMusic = game.add.audio("game-music");
+    this.gameMusic.play();
+
+    this.coinSound = game.add.audio("sfx-coin");
+    this.coinSound.play();
   },
 
   //----------------------------------------------------------------------------
@@ -150,10 +162,11 @@ GameState.prototype = {
 
   checkCollisions: function() {
     game.physics.arcade.collide(this.player, this.walls);
-    game.physics.arcade.overlap(this.player, this.coins, this.onCoinCollect);
+    game.physics.arcade.overlap(this.player, this.coins, this.onCoinCollect, null, this);
   },
 
   onCoinCollect: function(player, coin) {
+    this.coinSound.play();
     coin.kill();
   }
 }
